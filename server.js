@@ -515,7 +515,7 @@ app.get('/', async (req, res) => {
             if (lugares.length > 0) {
               contenidoHTML = `
                 <div class="poster-view">
-                  <h2 style="margin-bottom:5px;">Qué hacer en ${escaparHTML(req.query.ciudad)}</h2>
+                  <p style="margin:4px 0;">Hecho con 💚 por <b style="color:#4CAF50;">Dani</b></p>
                   <p style="color:#888; font-size:0.85rem; margin-top:0;">Tocá un lugar para ver más info</p>
                   ${lugares.map(l => `
                     <details class="album-dropdown" data-placeid="${escaparHTML(l.placeId)}">

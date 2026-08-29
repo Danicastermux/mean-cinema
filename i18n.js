@@ -6,6 +6,7 @@
 
 const TRADUCCIONES = {
   'es-MX': {
+    tituloSitio: 'Buscador Pro Multimedia', queHacer: 'Qué hacer', cronologias: 'Cronologías', hechoCon: 'Hecho con',
     buscarPlaceholder: '¿Qué buscas hoy?', pelicula: 'Película', serie: 'Serie', musica: 'Música', eventos: 'Eventos',
     buscar: 'Buscar', region: 'Región', idioma: 'Idioma', tipo: 'Tipo', generos: 'Géneros', estreno: 'Estreno',
     productora: 'Casa productora', rating: 'Rating', repartoPrincipal: 'Reparto principal', sinopsis: 'Sinopsis',
@@ -16,6 +17,7 @@ const TRADUCCIONES = {
     noResultados: 'No se encontraron resultados para', comprarEntradas: 'Comprar entradas', enCartelera: 'En cartelera'
   },
   'en-US': {
+    tituloSitio: 'Multimedia Pro Search', queHacer: 'Things to do', cronologias: 'Timelines', hechoCon: 'Made with',
     buscarPlaceholder: 'What are you looking for today?', pelicula: 'Movie', serie: 'TV Show', musica: 'Music', eventos: 'Events',
     buscar: 'Search', region: 'Region', idioma: 'Language', tipo: 'Type', generos: 'Genres', estreno: 'Release date',
     productora: 'Production company', rating: 'Rating', repartoPrincipal: 'Main cast', sinopsis: 'Synopsis',
@@ -26,6 +28,7 @@ const TRADUCCIONES = {
     noResultados: 'No results found for', comprarEntradas: 'Buy tickets', enCartelera: 'In theaters'
   },
   'pt-BR': {
+    tituloSitio: 'Buscador Pro Multimídia', queHacer: 'O que fazer', cronologias: 'Cronologias', hechoCon: 'Feito com',
     buscarPlaceholder: 'O que você procura hoje?', pelicula: 'Filme', serie: 'Série', musica: 'Música', eventos: 'Eventos',
     buscar: 'Buscar', region: 'Região', idioma: 'Idioma', tipo: 'Tipo', generos: 'Gêneros', estreno: 'Estreia',
     productora: 'Produtora', rating: 'Avaliação', repartoPrincipal: 'Elenco principal', sinopsis: 'Sinopse',
@@ -36,6 +39,7 @@ const TRADUCCIONES = {
     noResultados: 'Nenhum resultado encontrado para', comprarEntradas: 'Comprar ingressos', enCartelera: 'Em cartaz'
   },
   'fr-FR': {
+    tituloSitio: 'Recherche Pro Multimédia', queHacer: 'Que faire', cronologias: 'Chronologies', hechoCon: 'Fait avec',
     buscarPlaceholder: 'Que recherchez-vous aujourd\'hui ?', pelicula: 'Film', serie: 'Série', musica: 'Musique', eventos: 'Événements',
     buscar: 'Rechercher', region: 'Région', idioma: 'Langue', tipo: 'Type', generos: 'Genres', estreno: 'Sortie',
     productora: 'Société de production', rating: 'Note', repartoPrincipal: 'Acteurs principaux', sinopsis: 'Synopsis',
