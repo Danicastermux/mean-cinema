@@ -412,6 +412,7 @@ app.get('/cronologia/:clave', async (req, res) => {
       <div style="padding-bottom: 40px;">${contenidoHTML}</div>
       <footer style="text-align:center; padding:30px 20px 40px; color:#888; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.08); margin-top:30px;">
         <p style="margin:4px 0;">${t('hechoCon', idioma)} 💚 por <b style="color:#4CAF50;">Dani</b></p>
+        <p style="margin:4px 0; font-size:11px; color:#888;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
         <p style="margin:4px 0;">¿Preguntas o dudas? <a href="mailto:dcastillohor@yahoo.com" style="color:#4CAF50;">dcastillohor@yahoo.com</a></p>
       </footer>
     </body>
@@ -1056,6 +1057,7 @@ app.get('/', async (req, res) => {
 
       <footer style="text-align:center; padding:30px 20px 110px; color:#888; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.08); margin-top:30px;">
         <p style="margin:4px 0;">${t('hechoCon', idioma)} 💚 por  <b style="color:#4CAF50;">Dani</b></p>
+        <p style="margin:4px 0; font-size:11px; color:#888;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
         <p style="margin:4px 0;">¿Preguntas o dudas? <a href="mailto:dcastillohor@yahoo.com" style="color:#4CAF50;">dcastillohor@yahoo.com</a></p>
       </footer>
     </body>
