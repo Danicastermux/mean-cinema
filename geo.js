@@ -14,8 +14,8 @@ async function detectarPaisPorIP(hacerPeticion, ip) {
     const esLocal = ipLimpia === '::1' || ipLimpia === '127.0.0.1' || ipLimpia.startsWith('192.168.') || ipLimpia.startsWith('10.');
     if (esLocal) return null;
 
-    const data = await hacerPeticion(`https://ipapi.co/${ipLimpia}/json/`);
-    if (data && data.country_code && !data.error) {
+    const data = await hacerPeticion(`https://ipwho.is/${ipLimpia}`);
+    if (data && data.success && data.country_code) {
       return data.country_code.toLowerCase(); // ej: 'mx', 'us', 'ar', 'es'
     }
   } catch (e) {
