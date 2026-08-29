@@ -1,3 +1,5 @@
+
+
 require('dotenv').config();
 const express = require('express');
 const https = require('https');
@@ -409,7 +411,7 @@ app.get('/cronologia/:clave', async (req, res) => {
       </div>
       <div style="padding-bottom: 40px;">${contenidoHTML}</div>
       <footer style="text-align:center; padding:30px 20px 40px; color:#888; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.08); margin-top:30px;">
-        <p style="margin:4px 0;">Hecho con 💚 por <b style="color:#4CAF50;">Dani</b></p>
+        <p style="margin:4px 0;">${t('hechoCon', idioma)} 💚 por <b style="color:#4CAF50;">Dani</b></p>
         <p style="margin:4px 0;">¿Preguntas o dudas? <a href="mailto:dcastillohor@yahoo.com" style="color:#4CAF50;">dcastillohor@yahoo.com</a></p>
       </footer>
     </body>
@@ -486,7 +488,7 @@ app.get('/', async (req, res) => {
     const franquicias = listaFranquiciasDisponibles();
     contenidoHTML = `
       <div class="poster-view">
-        <h2 style="margin-bottom:5px;">Cronologías</h2>
+        <h2 style="margin-bottom:5px;">${t('cronologias', idioma)}</h2>
         <p style="color:#888; font-size:0.85rem; margin-top:0;">Orden narrativo recomendado, curado a mano — no es el orden de estreno.</p>
         <div class="cronologia-list">
           ${franquicias.map(f => `
@@ -994,7 +996,7 @@ app.get('/', async (req, res) => {
   } else {
     contenidoHTML = `
       <div class="poster-view" style="text-align:center; padding:40px 20px;">
-        <h1>Buscador Pro Multimedia</h1>
+        <h1>${t('tituloSitio', idioma)}</h1>
         <p>Explora <b>Películas</b>, <b>Series</b> o <b>Música</b>.</p>
       </div>`;
   }
@@ -1005,7 +1007,7 @@ app.get('/', async (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Buscador Pro Multimedia</title>
+      <title>${t('tituloSitio', idioma)}</title>
       ${estilosGlobales}
     </head>
     <body>
@@ -1021,7 +1023,7 @@ app.get('/', async (req, res) => {
               <option value="serie" ${mode === 'serie' ? 'selected' : ''}>${t('serie', idioma)}</option>
               <option value="musica" ${mode === 'musica' ? 'selected' : ''}>${t('musica', idioma)}</option>
               <option value="eventos" ${mode === 'eventos' ? 'selected' : ''}>${t('eventos', idioma)}</option>
-              <option value="quehacer" ${mode === 'quehacer' ? 'selected' : ''}>Qué hacer</option>
+              <option value="quehacer" ${mode === 'quehacer' ? 'selected' : ''}>${t('queHacer', idioma)}</option>
               <option value="cronologia" ${mode === 'cronologia' ? 'selected' : ''}>Cronologías</option>
             </select>
             <input type="text" name="q" placeholder="${(mode === 'eventos' || mode === 'quehacer') ? 'Palabra clave (opcional)' : t('buscarPlaceholder', idioma)}" value="${escaparHTML(req.query.q || '')}" ${(mode === 'eventos' || mode === 'quehacer' || mode === 'cronologia') ? '' : 'required'}>
@@ -1053,7 +1055,7 @@ app.get('/', async (req, res) => {
       <div style="padding-bottom: 40px;">${contenidoHTML}</div>
 
       <footer style="text-align:center; padding:30px 20px 110px; color:#888; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.08); margin-top:30px;">
-        <p style="margin:4px 0;">Hecho con 💚 por <b style="color:#4CAF50;">Dani</b></p>
+        <p style="margin:4px 0;">${t('hechoCon', idioma)} 💚 por  <b style="color:#4CAF50;">Dani</b></p>
         <p style="margin:4px 0;">¿Preguntas o dudas? <a href="mailto:dcastillohor@yahoo.com" style="color:#4CAF50;">dcastillohor@yahoo.com</a></p>
       </footer>
     </body>
