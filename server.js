@@ -1005,6 +1005,86 @@ app.get('/', async (req, res) => {
                 ${posterUrl ? `<div class="poster-img-container"><img src="${escaparHTML(posterUrl)}" alt="${escaparHTML(nombre)}" class="poster-img"></div>` : ''}
                 <div>
                   <h2>${escaparHTML(nombre)}</h2>
+                <button class="fav-btn" id="favBtn"
+                  data-id="${escaparHTML(String(seleccionado.id))}"
+                  data-tipo="${escaparHTML(mediaType)}"
+                  data-nombre="${escaparHTML(nombre)}"
+                  data-poster="${escaparHTML(posterUrl || '')}"
+                  data-anio="${escaparHTML(estreno !== 'N/A' ? estreno.substring(0,4) : '')}"
+                  style="margin:4px 0 14px; background:rgba(76,175,80,0.15); border:1px solid #4CAF50; color:#4CAF50; padding:6px 16px; border-radius:20px; cursor:pointer; font-size:0.9rem;"
+                  onclick="toggleFavorito()">☆ ${idioma === 'en-US' ? 'Save' : (idioma === 'pt-BR' ? 'Salvar' : (idioma === 'fr-FR' ? 'Enregistrer' : 'Guardar'))}</button>
+                <script>
+                (function() {
+                  var CLAVE_FAV = 'mc_favoritos';
+                  var CLAVE_HIST = 'mc_historial';
+
+                  function leer(clave) {
+                    try { return JSON.parse(localStorage.getItem(clave) || '[]'); } catch (e) { return []; }
+                  }
+                  function guardar(clave, lista) {
+                    try { localStorage.setItem(clave, JSON.stringify(lista)); } catch (e) {}
+                  }
+
+                  var btn = document.getElementById('favBtn');
+                  if (btn) {
+                    var itemId = btn.getAttribute('data-id');
+                    var itemTipo = btn.getAttribute('data-tipo');
+                    var claveItem = itemTipo + '-' + itemId;
+
+                    function estaGuardado() {
+                      var favs = leer(CLAVE_FAV);
+                      for (var i = 0; i < favs.length; i++) {
+                        if (favs[i].clave === claveItem) return true;
+                      }
+                      return false;
+                    }
+
+                    function actualizarBoton() {
+                      var guardado = estaGuardado();
+                      btn.innerHTML = guardado ? '\u2605 Guardado' : '\u2606 Guardar';
+                      btn.style.background = guardado ? '#4CAF50' : 'rgba(76,175,80,0.15)';
+                      btn.style.color = guardado ? '#000' : '#4CAF50';
+                    }
+
+                    window.toggleFavorito = function() {
+                      var favs = leer(CLAVE_FAV);
+                      var yaEsta = -1;
+                      for (var i = 0; i < favs.length; i++) {
+                        if (favs[i].clave === claveItem) { yaEsta = i; break; }
+                      }
+                      if (yaEsta >= 0) {
+                        favs.splice(yaEsta, 1);
+                      } else {
+                        favs.unshift({
+                          clave: claveItem,
+                          id: itemId,
+                          tipo: itemTipo,
+                          nombre: btn.getAttribute('data-nombre'),
+                          poster: btn.getAttribute('data-poster'),
+                          anio: btn.getAttribute('data-anio')
+                        });
+                      }
+                      guardar(CLAVE_FAV, favs);
+                      actualizarBoton();
+                    };
+
+                    actualizarBoton();
+
+                    var hist = leer(CLAVE_HIST);
+                    hist = hist.filter(function(h) { return h.clave !== claveItem; });
+                    hist.unshift({
+                      clave: claveItem,
+                      id: itemId,
+                      tipo: itemTipo,
+                      nombre: btn.getAttribute('data-nombre'),
+                      poster: btn.getAttribute('data-poster'),
+                      anio: btn.getAttribute('data-anio')
+                    });
+                    if (hist.length > 30) hist = hist.slice(0, 30);
+                    guardar(CLAVE_HIST, hist);
+                  }
+                })();
+                </script>
                   <p><b>${t('tipo', idioma)}:</b> ${mediaType === 'movie' ? t('pelicula', idioma) : t('serie', idioma)}</p>
                   <p><b>${t('generos', idioma)}:</b> ${escaparHTML(generos)}</p>
                   <p><b>${t('estreno', idioma)}:</b> ${escaparHTML(estreno)}</p>
