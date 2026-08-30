@@ -389,6 +389,78 @@ const cuadroAtribucion = `
 
 // Se llama al hacer clic en un evento de música o religioso, para traer una previsualización real.
 // Los eventos deportivos NO llaman a esto — su sonido se genera en el navegador (ver reproducirFanfarreaDeportiva).
+function paginaGuardados(titulo, claveStorage, emoji) {
+  return `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${titulo} - MEAN Cinema</title>
+      ${estilosGlobales}
+    </head>
+    <body>
+      <div class="navbar">
+        <a href="/">MEAN Cinema</a> <a href="/favoritos" style="color:#ccc; text-decoration:none; font-size:0.85rem; margin-left:10px;">Favoritos</a> <a href="/historial" style="color:#ccc; text-decoration:none; font-size:0.85rem; margin-left:6px;">Historial</a>
+        <a href="/" style="color:#ccc; text-decoration:none; font-size:0.9rem;">Volver al buscador</a>
+      </div>
+      <div style="padding:20px; max-width:900px; margin:0 auto;">
+        <h1>${emoji} ${titulo}</h1>
+        <p style="color:#888;">Guardado en este dispositivo. No se sincroniza entre celular y computadora.</p>
+        <div id="lista" style="display:flex; flex-direction:column; gap:12px; margin-top:20px;"></div>
+      </div>
+      <script>
+        (function() {
+          var CLAVE = '${claveStorage}';
+          function leer() {
+            try { return JSON.parse(localStorage.getItem(CLAVE) || '[]'); } catch (e) { return []; }
+          }
+          function guardar(lista) {
+            try { localStorage.setItem(CLAVE, JSON.stringify(lista)); } catch (e) {}
+          }
+          function render() {
+            var lista = leer();
+            var cont = document.getElementById('lista');
+            if (lista.length === 0) {
+              cont.innerHTML = '<p style="color:#888;">Todavia no hay nada guardado aca.</p>';
+              return;
+            }
+            var html = '';
+            for (var i = 0; i < lista.length; i++) {
+              var it = lista[i];
+              var url = '/?q=' + encodeURIComponent(it.nombre) + '&mode=' + (it.tipo === 'tv' ? 'serie' : 'pelicula');
+              html += '<div style="display:flex; gap:12px; align-items:center; background:rgba(255,255,255,0.05); border-radius:10px; padding:10px;">';
+              if (it.poster) { html += '<img src="' + it.poster + '" style="width:60px; border-radius:6px;">'; }
+              html += '<div style="flex:1;"><a href="' + url + '" style="color:#fff; text-decoration:none; font-weight:bold;">' + it.nombre + '</a>' + (it.anio ? ' <span style="color:#888;">(' + it.anio + ')</span>' : '') + '</div>';
+              html += '<button data-clave="' + it.clave + '" class="btn-quitar" style="background:none; border:1px solid #888; color:#888; border-radius:14px; padding:4px 10px; cursor:pointer;">Quitar</button>';
+              html += '</div>';
+            }
+            cont.innerHTML = html;
+            var botones = cont.querySelectorAll('.btn-quitar');
+            for (var j = 0; j < botones.length; j++) {
+              botones[j].addEventListener('click', function() {
+                var clave = this.getAttribute('data-clave');
+                guardar(leer().filter(function(x) { return x.clave !== clave; }));
+                render();
+              });
+            }
+          }
+          render();
+        })();
+      </script>
+    </body>
+    </html>
+  `;
+}
+
+app.get('/favoritos', (req, res) => {
+  res.send(paginaGuardados('Favoritos', 'mc_favoritos', '\u2b50'));
+});
+
+app.get('/historial', (req, res) => {
+  res.send(paginaGuardados('Historial', 'mc_historial', '\ud83d\udd52'));
+});
+
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Página dedicada a mostrar una cronología curada a mano (Star Wars, MCU, etc.)
@@ -441,7 +513,7 @@ app.get('/cronologia/:clave', async (req, res) => {
     <body>
       ${cuadroAtribucion}
       <div class="navbar">
-        <a href="/">MEAN Cinema</a>
+        <a href="/">MEAN Cinema</a> <a href="/favoritos" style="color:#ccc; text-decoration:none; font-size:0.85rem; margin-left:10px;">Favoritos</a> <a href="/historial" style="color:#ccc; text-decoration:none; font-size:0.85rem; margin-left:6px;">Historial</a>
         <a href="/" style="color:#ccc; text-decoration:none; font-size:0.9rem;">← Volver al buscador</a>
       </div>
       <div style="padding-bottom: 40px;">${contenidoHTML}</div>
@@ -1166,7 +1238,7 @@ app.get('/', async (req, res) => {
       ${postersFondoHTML}
         ${cuadroAtribucion}
       <div class="navbar">
-        <a href="/">MEAN Cinema</a>
+        <a href="/">MEAN Cinema</a> <a href="/favoritos" style="color:#ccc; text-decoration:none; font-size:0.85rem; margin-left:10px;">Favoritos</a> <a href="/historial" style="color:#ccc; text-decoration:none; font-size:0.85rem; margin-left:6px;">Historial</a>
         <div class="controls-group">
           <form class="search-box" action="/" method="GET">
             <input type="hidden" name="region" value="${region}">
