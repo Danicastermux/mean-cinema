@@ -340,7 +340,7 @@ const cuadroAtribucion = `
         La información de películas y series (sinopsis, reparto, pósters, trailers) proviene de
         <b>TMDB (The Movie Database)</b>. La información musical proviene de <b>Deezer</b> y
         <b>Apple iTunes</b>. Los videos se muestran a través del reproductor oficial embebido de
-        <b>YouTube</b>. No alojamos ni reclamamos derechos sobre ningún contenido; todo pertenece
+        <b>YouTube</b>. Los conciertos y alertas de artistas provienen de <b>Bandsintown</b>, los eventos y venta de entradas de <b>Ticketmaster</b>, y los lugares de la sección "Qué hacer" de <b>Geoapify</b>. Este sitio está alojado en <b>Render</b>. No alojamos ni reclamamos derechos sobre ningún contenido; todo pertenece
         a sus respectivos dueños y plataformas.
       </p>
       <p style="font-size:0.8rem; color:#888;">
@@ -350,6 +350,7 @@ const cuadroAtribucion = `
     </div>
   </div>
   <script>
+    function abrirAtribucion(){ document.getElementById('attributionOverlay').style.display='flex'; }
     function cerrarAtribucion() {
       document.getElementById('attributionOverlay').style.display = 'none';
       localStorage.setItem('atribucionVista', 'true');
@@ -414,6 +415,7 @@ app.get('/cronologia/:clave', async (req, res) => {
         <p style="margin:4px 0;">${t('hechoCon', idioma)} 💚 por <b style="color:#4CAF50;">Dani</b></p>
         <p style="margin:4px 0; font-size:11px; color:#888;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
         <p style="margin:4px 0;">¿Preguntas o dudas? <a href="mailto:dcastillohor@yahoo.com" style="color:#4CAF50;">dcastillohor@yahoo.com</a></p>
+        <p style="margin:4px 0; font-size:11px;"><a href="javascript:void(0)" onclick="abrirAtribucion()" style="color:#4CAF50; text-decoration:underline;">ℹ️ Fuentes de datos</a></p>
       </footer>
     </body>
     </html>
@@ -1059,6 +1061,7 @@ app.get('/', async (req, res) => {
         <p style="margin:4px 0;">${t('hechoCon', idioma)} 💚 por  <b style="color:#4CAF50;">Dani</b></p>
         <p style="margin:4px 0; font-size:11px; color:#888;">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
         <p style="margin:4px 0;">¿Preguntas o dudas? <a href="mailto:dcastillohor@yahoo.com" style="color:#4CAF50;">dcastillohor@yahoo.com</a></p>
+        <p style="margin:4px 0; font-size:11px;"><a href="javascript:void(0)" onclick="abrirAtribucion()" style="color:#4CAF50; text-decoration:underline;">ℹ️ Fuentes de datos</a></p>
       </footer>
     </body>
     </html>
