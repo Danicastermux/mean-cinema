@@ -91,20 +91,7 @@ function proveedoresPorRegion(watchProvidersResponse, regionCode) {
   };
 }
 
-// Trae posters de peliculas populares (para el collage de fondo del inicio)
-async function peliculasPopulares(hacerPeticion, apiKey, idioma = 'es-MX', paginas = 3) {
-  let posters = [];
-  for (let pagina = 1; pagina <= paginas; pagina++) {
-    const url = tmdbUrl('/movie/popular', apiKey, { page: pagina }, idioma);
-    const data = await hacerPeticion(url);
-    const resultados = data.results || [];
-    posters.push(...resultados.filter(r => r.poster_path).map(r => `${TMDB_IMG}/w342${r.poster_path}`));
-  }
-  return posters;
-}
-
 module.exports = {
-  peliculasPopulares,
   buscarPeliculas,
   buscarSeries,
   detalleTMDB,

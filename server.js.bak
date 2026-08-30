@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const https = require('https');
 const mongoose = require('mongoose');
-const { buscarPeliculas, buscarSeries, detalleTMDB, coleccionTMDB, imagenTMDB, trailerOficial, proveedoresPorRegion, peliculasPopulares } = require('./tmdb');
+const { buscarPeliculas, buscarSeries, detalleTMDB, coleccionTMDB, imagenTMDB, trailerOficial, proveedoresPorRegion } = require('./tmdb');
 const { buscarMusica, obtenerAlbumesArtista, obtenerCancionesAlbum, obtenerBiografiaArtista, buscarEnDeezer } = require('./music');
 const { detectarPaisPorIP, idiomaParaRegion, REGIONES_SOPORTADAS } = require('./geo');
 const { buscarVideoConCache } = require('./youtube');
@@ -374,7 +374,6 @@ app.get('/cronologia/:clave', async (req, res) => {
   const resultado = await resolverFranquiciaCompleta(hacerPeticion, TMDB_API_KEY, req.params.clave, idioma);
 
   let contenidoHTML = '';
-  let postersFondoHTML = '';
   if (!resultado) {
     contenidoHTML = `<div class="poster-view" style="text-align:center;"><h2>Esa cronología no existe</h2></div>`;
   } else {
@@ -404,14 +403,6 @@ app.get('/cronologia/:clave', async (req, res) => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Cronología — MEAN Cinema</title>
       ${estilosGlobales}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSV5NFGB4H"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GSV5NFGB4H');
-    </script>
     </head>
     <body>
       ${cuadroAtribucion}
@@ -1011,32 +1002,6 @@ app.get('/', async (req, res) => {
         <h1>${t('tituloSitio', idioma)}</h1>
         <p>Explora <b>Películas</b>, <b>Series</b> o <b>Música</b>.</p>
       </div>`;
-
-    try {
-      const posters = await peliculasPopulares(hacerPeticion, TMDB_API_KEY, idioma);
-      if (posters.length > 0) {
-        const columnas = 6;
-        let columnasHTML = '';
-        for (let c = 0; c < columnas; c++) {
-          const colPosters = posters.filter((_, i) => i % columnas === c);
-          const dobladas = [...colPosters, ...colPosters];
-          columnasHTML += `<div class="poster-col">${dobladas.map(src => `<img src="${src}" loading="lazy">`).join('')}</div>`;
-        }
-        postersFondoHTML = `
-        <div class="bg-poster-collage">${columnasHTML}</div>
-        <div class="bg-overlay"></div>
-        <style>
-          .bg-poster-collage { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:-2; overflow:hidden; display:flex; gap:4px; filter: brightness(1.28) saturate(1.15); pointer-events:none; }
-          .poster-col { flex:1; display:flex; flex-direction:column; gap:4px; animation: bgScrollUp 50s linear infinite; }
-          .poster-col:nth-child(even) { animation-direction: reverse; }
-          .poster-col img { width:100%; height:auto; display:block; border-radius:4px; opacity:0.9; }
-          @keyframes bgScrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-          @media (max-width:768px) { .bg-poster-collage { display:none !important; } }
-        </style>`;
-      }
-    } catch (e) {
-      console.error('Error cargando collage de posters de fondo:', e.message);
-    }
   }
 
   res.send(`
@@ -1047,18 +1012,9 @@ app.get('/', async (req, res) => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${t('tituloSitio', idioma)}</title>
       ${estilosGlobales}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSV5NFGB4H"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GSV5NFGB4H');
-    </script>
     </head>
     <body>
-      ${postersFondoHTML}
-        ${cuadroAtribucion}
+      ${cuadroAtribucion}
       <div class="navbar">
         <a href="/">MEAN Cinema</a>
         <div class="controls-group">

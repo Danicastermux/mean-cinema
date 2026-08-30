@@ -404,14 +404,6 @@ app.get('/cronologia/:clave', async (req, res) => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Cronología — MEAN Cinema</title>
       ${estilosGlobales}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSV5NFGB4H"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GSV5NFGB4H');
-    </script>
     </head>
     <body>
       ${cuadroAtribucion}
@@ -1047,14 +1039,6 @@ app.get('/', async (req, res) => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${t('tituloSitio', idioma)}</title>
       ${estilosGlobales}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSV5NFGB4H"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GSV5NFGB4H');
-    </script>
     </head>
     <body>
       ${postersFondoHTML}
