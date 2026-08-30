@@ -1,4 +1,5 @@
+*.bak
+*.bak2
+patch_*.py
 node_modules/
 .env
-conciertos.env
-0
