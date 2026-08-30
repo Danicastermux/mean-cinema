@@ -461,6 +461,27 @@ app.get('/historial', (req, res) => {
   res.send(paginaGuardados('Historial', 'mc_historial', '\ud83d\udd52'));
 });
 
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send(
+    'User-agent: *\n' +
+    'Allow: /\n' +
+    'Disallow: /favoritos\n' +
+    'Disallow: /historial\n' +
+    'Sitemap: https://mean-cinema.onrender.com/sitemap.xml\n'
+  );
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const franquicias = listaFranquiciasDisponibles();
+  let urls = '<url><loc>https://mean-cinema.onrender.com/</loc><changefreq>daily</changefreq></url>';
+  franquicias.forEach(f => {
+    urls += '<url><loc>https://mean-cinema.onrender.com/cronologia/' + f.key + '</loc><changefreq>monthly</changefreq></url>';
+  });
+  res.type('application/xml');
+  res.send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + urls + '</urlset>');
+});
+
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Página dedicada a mostrar una cronología curada a mano (Star Wars, MCU, etc.)
@@ -591,6 +612,9 @@ app.get('/', async (req, res) => {
   }
 
   let contenidoHTML = '';
+  let tituloPagina = t('tituloSitio', idioma);
+  let descripcionPagina = 'Busca peliculas, series y musica: sinopsis, reparto, donde ver, precios de entradas y mas.';
+  let ogImagenHTML = '';
   let tabsHTML = '';
 
   if (mode === 'cronologia') {
@@ -940,6 +964,9 @@ app.get('/', async (req, res) => {
           const estreno = detalle.release_date || detalle.first_air_date || 'N/A';
           const sinopsis = detalle.overview || 'Sin sinopsis disponible.';
           const posterUrl = imagenTMDB(detalle.poster_path, 'w500');
+          tituloPagina = nombre + ' - MEAN Cinema';
+          descripcionPagina = sinopsis.substring(0, 160);
+          if (posterUrl) { ogImagenHTML = '<meta property="og:image" content="' + escaparHTML(posterUrl) + '">'; }
           const rating = detalle.vote_average ? detalle.vote_average.toFixed(1) : 'N/A';
           const productora = detalle.production_companies && detalle.production_companies.length > 0
             ? detalle.production_companies[0].name : 'N/A';
@@ -1223,7 +1250,13 @@ app.get('/', async (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${t('tituloSitio', idioma)}</title>
+      <title>${escaparHTML(tituloPagina)}</title>
+      <meta name="description" content="${escaparHTML(descripcionPagina)}">
+      <meta property="og:title" content="${escaparHTML(tituloPagina)}">
+      <meta property="og:description" content="${escaparHTML(descripcionPagina)}">
+      <meta property="og:type" content="website">
+      ${ogImagenHTML}
+      <meta name="twitter:card" content="summary_large_image">
       ${estilosGlobales}
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSV5NFGB4H"></script>
