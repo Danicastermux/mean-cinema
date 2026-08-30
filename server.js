@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const https = require('https');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 const { buscarPeliculas, buscarSeries, detalleTMDB, coleccionTMDB, imagenTMDB, trailerOficial, proveedoresPorRegion, peliculasPopulares } = require('./tmdb');
 const { buscarMusica, obtenerAlbumesArtista, obtenerCancionesAlbum, obtenerBiografiaArtista, buscarEnDeezer } = require('./music');
 const { detectarPaisPorIP, idiomaParaRegion, REGIONES_SOPORTADAS } = require('./geo');
@@ -15,6 +16,17 @@ const { obtenerCoordenadasCiudad, buscarLugaresInteresantes, obtenerDetalleLugar
 const { resolverFranquiciaCompleta, listaFranquiciasDisponibles } = require('./cronologias');
 
 const app = express();
+
+// Limite general: evita que una sola IP sature el servidor o agote
+// las cuotas gratuitas de las APIs externas (TMDB, YouTube, etc.)
+const limiterGeneral = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // 100 peticiones por IP en esa ventana
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Demasiadas solicitudes desde esta IP. Probá de nuevo en unos minutos.' }
+});
+app.use(limiterGeneral);
 const PORT = process.env.PORT || 3000;
 
 const MONGO_URI = process.env.MONGO_URI;
@@ -388,7 +400,6 @@ app.get('/cronologia/:clave', async (req, res) => {
   const resultado = await resolverFranquiciaCompleta(hacerPeticion, TMDB_API_KEY, req.params.clave, idioma);
 
   let contenidoHTML = '';
-  let postersFondoHTML = '';
   if (!resultado) {
     contenidoHTML = `<div class="poster-view" style="text-align:center;"><h2>Esa cronología no existe</h2></div>`;
   } else {
@@ -486,6 +497,7 @@ app.get('/api/lugar', async (req, res) => {
 });
 
 app.get('/', async (req, res) => {
+  let postersFondoHTML = '';
   let query = req.query.q ? req.query.q.trim() : '';
   const mode = req.query.mode || 'pelicula'; // 'pelicula' | 'serie' | 'musica'
   const indexParam = parseInt(req.query.index) || 0;
