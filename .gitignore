@@ -1,5 +1,5 @@
-*.bak
-*.bak2
+*.bak*
 patch_*.py
 node_modules/
 .env
+*.env
