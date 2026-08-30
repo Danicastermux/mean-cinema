@@ -40,15 +40,29 @@ const busquedaSchema = new mongoose.Schema({
 });
 const Busqueda = mongoose.model('Busqueda', busquedaSchema);
 
-function hacerPeticion(urlApi) {
+function hacerPeticion(urlApi, timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
-    https.get(urlApi, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+    const req = https.get(urlApi, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+      // Si la API externa responde con un error HTTP (401, 403, 429, 500, etc.),
+      // no intentamos parsear el cuerpo como si fuera valido: fallamos rapido.
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        res.resume(); // descarta el cuerpo de la respuesta sin procesarlo
+        reject(new Error(`API externa respondio con estado ${res.statusCode} (${urlApi.split('?')[0]})`));
+        return;
+      }
       let datos = '';
       res.on('data', (chunk) => { datos += chunk; });
       res.on('end', () => {
         try { resolve(JSON.parse(datos)); } catch (e) { reject(e); }
       });
     }).on('error', (err) => { reject(err); });
+
+    // Si la API externa nunca responde, no dejamos la peticion del usuario
+    // colgada para siempre: cortamos despues de timeoutMs y devolvemos error.
+    req.setTimeout(timeoutMs, () => {
+      req.destroy();
+      reject(new Error(`Timeout: la API externa no respondio en ${timeoutMs}ms (${urlApi.split('?')[0]})`));
+    });
   });
 }
 
