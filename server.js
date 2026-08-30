@@ -5,7 +5,7 @@ const express = require('express');
 const https = require('https');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
-const { buscarPeliculas, buscarSeries, detalleTMDB, coleccionTMDB, imagenTMDB, trailerOficial, proveedoresPorRegion, peliculasPopulares } = require('./tmdb');
+const { buscarPeliculas, buscarSeries, detalleTMDB, coleccionTMDB, imagenTMDB, trailerOficial, proveedoresPorRegion, peliculasPopulares, buscarDocumentales } = require('./tmdb');
 const { buscarMusica, obtenerAlbumesArtista, obtenerCancionesAlbum, obtenerBiografiaArtista, buscarEnDeezer } = require('./music');
 const { detectarPaisPorIP, idiomaParaRegion, REGIONES_SOPORTADAS } = require('./geo');
 const { buscarVideoConCache } = require('./youtube');
@@ -939,8 +939,10 @@ app.get('/', async (req, res) => {
       try {
         const mediaType = mode === 'serie' ? 'tv' : 'movie';
         const resultados = mode === 'serie'
-          ? await buscarSeries(hacerPeticion, TMDB_API_KEY, query, idioma)
-          : await buscarPeliculas(hacerPeticion, TMDB_API_KEY, query, idioma);
+            ? await buscarSeries(hacerPeticion, TMDB_API_KEY, query, idioma)
+            : mode === 'documental'
+            ? await buscarDocumentales(hacerPeticion, TMDB_API_KEY, query, idioma)
+            : await buscarPeliculas(hacerPeticion, TMDB_API_KEY, query, idioma);
 
         if (resultados.length > 0) {
           if (resultados.length > 1) {
@@ -1282,6 +1284,7 @@ app.get('/', async (req, res) => {
               <option value="musica" ${mode === 'musica' ? 'selected' : ''}>${t('musica', idioma)}</option>
               <option value="eventos" ${mode === 'eventos' ? 'selected' : ''}>${t('eventos', idioma)}</option>
               <option value="quehacer" ${mode === 'quehacer' ? 'selected' : ''}>${t('queHacer', idioma)}</option>
+              <option value="documental" ${mode === 'documental' ? 'selected' : ''}>Documental</option>
               <option value="cronologia" ${mode === 'cronologia' ? 'selected' : ''}>Cronologías</option>
             </select>
             <input type="text" name="q" placeholder="${(mode === 'eventos' || mode === 'quehacer') ? 'Palabra clave (opcional)' : t('buscarPlaceholder', idioma)}" value="${escaparHTML(req.query.q || '')}" ${(mode === 'eventos' || mode === 'quehacer' || mode === 'cronologia') ? '' : 'required'}>

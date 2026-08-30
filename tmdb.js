@@ -19,6 +19,17 @@ async function buscarPeliculas(hacerPeticion, apiKey, query, idioma = 'es-MX') {
   return resultados;
 }
 
+// Busqueda SOLO de documentales (busca peliculas por nombre, filtra por genero Documental = id 99 en TMDB)
+async function buscarDocumentales(hacerPeticion, apiKey, query, idioma = 'es-MX') {
+  const url = tmdbUrl('/search/movie', apiKey, { query, include_adult: 'false' }, idioma);
+  const data = await hacerPeticion(url);
+  const resultados = (data.results || [])
+    .filter(r => r.genre_ids && r.genre_ids.includes(99))
+    .map(r => ({ ...r, media_type: 'movie' }));
+  resultados.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+  return resultados;
+}
+
 // Búsqueda SOLO de series
 async function buscarSeries(hacerPeticion, apiKey, query, idioma = 'es-MX') {
   const url = tmdbUrl('/search/tv', apiKey, { query }, idioma);
@@ -105,6 +116,7 @@ async function peliculasPopulares(hacerPeticion, apiKey, idioma = 'es-MX', pagin
 
 module.exports = {
   peliculasPopulares,
+  buscarDocumentales,
   buscarPeliculas,
   buscarSeries,
   detalleTMDB,
